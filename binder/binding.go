@@ -35,6 +35,13 @@ func Validate(obj interface{}) error {
 // values have to be strings.
 // Supported types are string, int, float, and bool.
 func setWithProperType(valueKind reflect.Kind, val string, structField reflect.Value) error {
+	if valueKind == reflect.Ptr {
+		valueKind = structField.Type().Elem().Kind()
+		if structField.IsNil() {
+			structField.Set(reflect.New(structField.Type().Elem()))
+		}
+		structField = structField.Elem()
+	}
 	switch valueKind {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		if val == "" {
@@ -101,8 +108,21 @@ func iterFields(obj interface{}, f func(reflect.StructField, reflect.Value) erro
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
 		var err error
-		if field.Type.Kind() == reflect.Struct && field.Anonymous {
-			err = iterFields(obj, f)
+		if field.Anonymous {
+			anonymousType := field.Type
+			anonymousValue := v.Field(i)
+			if anonymousType.Kind() == reflect.Ptr {
+				anonymousType = field.Type.Elem()
+			} else {
+				anonymousValue = anonymousValue.Addr()
+			}
+			if anonymousType.Kind() == reflect.Struct {
+				if anonymousValue.IsNil() {
+					anonymousValue = reflect.New(anonymousType)
+					v.Field(i).Set(anonymousValue)
+				}
+				err = iterFields(anonymousValue.Interface(), f)
+			}
 		} else {
 			err = f(field, v.Field(i))
 		}

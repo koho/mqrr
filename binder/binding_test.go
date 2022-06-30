@@ -9,11 +9,18 @@ import (
 
 var jsonTestData = []byte(`{"name":"john","age":50,"sex":"male"}`)
 
+type InnerBindingTest struct {
+	Location string `json:"location"`
+	Salary   int    `json:"salary" text:"3,,"`
+	X        *int   `text:"1,,"`
+}
+
 type bindingTest struct {
 	Name  string   `json:"name" text:"0,," topic:"name"`
 	Age   int      `json:"age" text:"1,," topic:"age"`
 	Text  string   `text:"0" topic:"last"`
 	Slice []string `topic:"last"`
+	InnerBindingTest
 }
 
 func TestJsonBinderBind(t *testing.T) {
@@ -37,15 +44,20 @@ func TestJSONDisallowUnknownFields(t *testing.T) {
 	require.Error(t, JSON.Bind(jsonTestData, &obj))
 }
 
-var textTestData = []byte(`john,50,male`)
+var textTestData = []byte(`john,50,male,10000`)
 
 func TestTextBinderBind(t *testing.T) {
 	obj := bindingTest{}
 	require.NoError(t, Text.Bind(textTestData, &obj))
+	x := 50
 	assert.Equal(t, bindingTest{
 		Name: "john",
 		Age:  50,
-		Text: "john,50,male",
+		Text: "john,50,male,10000",
+		InnerBindingTest: InnerBindingTest{
+			Salary: 10000,
+			X:      &x,
+		},
 	}, obj)
 }
 
