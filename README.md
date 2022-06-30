@@ -40,6 +40,10 @@ func main() {
 
 In the client side, we publish a message with our name to the `hello` topic, then wait for a response.
 
+```shell
+go get github.com/koho/mqrr/client
+```
+
 ```go
 package main
 
@@ -58,7 +62,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(resp.Payload) // Should output "Hello John"
+	fmt.Println(string(resp.Payload)) // Should output "Hello John"
 }
 ```
 
