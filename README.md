@@ -88,22 +88,22 @@ func main() {
 func main() {
 	r := mqrr.New()
 	g1 := r.Group("G1")
-	g1.Route(":dev/new", func(c *Context) {
+	g1.Route(":dev/new", func(c *mqrr.Context) {
 		c.String("new")
 	})
 	g2 := g1.Group("G2")
-	g2.Route(":temp", func(c *Context) {
+	g2.Route(":temp", func(c *mqrr.Context) {
 		c.String("temp")
 	})
 	r.Run("mqtt://broker-cn.emqx.io:1883")
 }
 ```
 
-### Data Binding
+### Data binding
 ```go
 type User struct {
 	Name string `topic:"name"`
-	Age  int `json:"age" validate:"gte=18"`
+	Age  int    `json:"age" validate:"gte=18"`
 }
 
 func main() {
@@ -121,5 +121,32 @@ func main() {
 		c.JSON(user)
 	})
 	r.Run("mqtt://broker-cn.emqx.io:1883")
+}
+```
+
+### Client requests in same connection
+```go
+func main() {
+	c, err := client.New("mqtt://broker-cn.emqx.io:1883")
+	if err != nil {
+		panic(err)
+	}
+	defer c.Close(context.Background())
+	wg := sync.WaitGroup{}
+	for _, name := range []string{"John", "Mary", "Ben"} {
+		wg.Add(1)
+		go func(n string) {
+			defer wg.Done()
+			resp, err := c.Request(context.Background(), &paho.Publish{
+				Topic:   "hello",
+				Payload: []byte(n),
+			})
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println(string(resp.Payload))
+		}(name)
+	}
+	wg.Wait()
 }
 ```
