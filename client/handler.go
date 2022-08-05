@@ -20,22 +20,25 @@ type Handler struct {
 }
 
 // NewHandler registers a response topic and listens for responses for all requests.
-func NewHandler(c *autopaho.ConnectionManager, router paho.Router, clientID string) (*Handler, error) {
+func NewHandler(c *autopaho.ConnectionManager, router paho.Router) *Handler {
 	h := &Handler{
 		c:          c,
 		router:     router,
-		respTopic:  fmt.Sprintf("%s/responses", clientID),
+		respTopic:  fmt.Sprintf("%s/responses", uuid.NewString()),
 		correlData: make(map[string]chan *paho.Publish),
 	}
 	router.RegisterHandler(h.respTopic, h.responseHandler)
-	if _, err := c.Subscribe(context.Background(), &paho.Subscribe{
+	return h
+}
+
+// Subscribe makes a subscription to the response topic.
+func (h *Handler) Subscribe(ctx context.Context) error {
+	_, err := h.c.Subscribe(ctx, &paho.Subscribe{
 		Subscriptions: map[string]paho.SubscribeOptions{
 			h.respTopic: {QoS: 1},
 		},
-	}); err != nil {
-		return nil, err
-	}
-	return h, nil
+	})
+	return err
 }
 
 func (h *Handler) addCorrelID(cID string, r chan *paho.Publish) {

@@ -35,11 +35,12 @@ func RequestWithCfg(ctx context.Context, cc autopaho.ClientConfig, pb *paho.Publ
 	router := paho.NewSingleHandlerRouter(nil)
 	cc.OnConnectionUp = func(manager *autopaho.ConnectionManager, connack *paho.Connack) {
 		req.Do(func() {
-			if h, err := NewHandler(manager, router, connack.Properties.AssignedClientID); err == nil {
+			h := NewHandler(manager, router)
+			if err := h.Subscribe(ctx); err == nil {
 				pub, err := h.Request(ctx, pb)
 				resp <- responsePub{pub, err}
 			} else {
-				resp <- responsePub{}
+				resp <- responsePub{err: err}
 			}
 		})
 	}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/eclipse/paho.golang/autopaho"
 	"github.com/eclipse/paho.golang/paho"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -25,7 +24,8 @@ func TestHandlerRequest(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	require.NoError(t, cm.AwaitConnection(ctx))
-	h, err := NewHandler(cm, router, uuid.NewString())
+	h := NewHandler(cm, router)
+	err = h.Subscribe(ctx)
 	require.NoError(t, err)
 
 	engine := runEchoServer(t.Name())
