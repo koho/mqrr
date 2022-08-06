@@ -212,7 +212,7 @@ func match(r1, r2 string) bool {
 	if r1 == r2 {
 		return true
 	}
-	return matchDeep(routeSplit(r1), routeSplit(r2))
+	return matchDeep(strings.Split(r1, "/"), strings.Split(r2, "/"))
 }
 
 func matchDeep(r1 []string, r2 []string) bool {
@@ -232,17 +232,4 @@ func matchDeep(r1 []string, r2 []string) bool {
 		return matchDeep(r1[1:], r2[1:])
 	}
 	return false
-}
-
-func routeSplit(route string) []string {
-	if len(route) == 0 {
-		return nil
-	}
-	var result []string
-	if strings.HasPrefix(route, "$share") {
-		result = strings.Split(route, "/")[1:]
-	} else {
-		result = strings.Split(route, "/")
-	}
-	return result
 }

@@ -4,6 +4,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/eclipse/paho.golang v0.10.1-0.20220310090452-2ab23ddb021d h1:OBpzUPt8Qb0zAr1KOmj5coeELFwRCl53TQepapodGtA=
 github.com/eclipse/paho.golang v0.10.1-0.20220310090452-2ab23ddb021d/go.mod h1:rhrV37IEwauUyx8FHrvmXOKo+QRKng5ncoN1vJiJMcs=
+github.com/eclipse/paho.golang v0.10.1-0.20220804083941-4df2dcdc8687 h1:UAk/UPulnyzGLQohq20uT9ErVHXk0gpi2J+2UQ9TkF4=
+github.com/eclipse/paho.golang v0.10.1-0.20220804083941-4df2dcdc8687/go.mod h1:rhrV37IEwauUyx8FHrvmXOKo+QRKng5ncoN1vJiJMcs=
 github.com/go-playground/assert/v2 v2.0.1 h1:MsBgLAaY856+nPRTKrp3/OZK38U/wa0CcBYNjji3q3A=
 github.com/go-playground/assert/v2 v2.0.1/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
 github.com/go-playground/locales v0.14.0 h1:u50s323jtVGugKlcYeyzC0etD1HifMjqmJqb8WugfUU=

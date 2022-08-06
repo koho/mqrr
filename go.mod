@@ -3,7 +3,7 @@ module github.com/koho/mqrr
 go 1.18
 
 require (
-	github.com/eclipse/paho.golang v0.10.1-0.20220310090452-2ab23ddb021d
+	github.com/eclipse/paho.golang v0.10.1-0.20220804083941-4df2dcdc8687
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
