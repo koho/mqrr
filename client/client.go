@@ -31,6 +31,20 @@ func New(broker string) (*Client, error) {
 	return NewWithCfg(cc)
 }
 
+// NewWithUser creates a new Client with auth user and password.
+func NewWithUser(broker, user, password string) (*Client, error) {
+	brokerUrl, err := url.Parse(broker)
+	if err != nil {
+		return nil, err
+	}
+	cc := autopaho.ClientConfig{
+		BrokerUrls: []*url.URL{brokerUrl},
+		KeepAlive:  30,
+	}
+	cc.SetUsernamePassword(user, []byte(password))
+	return NewWithCfg(cc)
+}
+
 // NewWithCfg creates a new Client with the given client config.
 func NewWithCfg(cc autopaho.ClientConfig) (*Client, error) {
 	client := &Client{

@@ -62,7 +62,7 @@ func (engine *Engine) Run(broker string) {
 
 // RunUser connects to the MQTT broker using auth user and password,
 // then starts listening requests.
-func (engine *Engine) RunUser(broker string, user, password string) {
+func (engine *Engine) RunUser(broker, user, password string) {
 	brokerUrl, err := url.Parse(broker)
 	if err != nil {
 		panic(err)

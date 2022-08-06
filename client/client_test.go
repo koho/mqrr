@@ -41,6 +41,16 @@ func defaultClientConfig(urls ...string) autopaho.ClientConfig {
 func TestNew(t *testing.T) {
 	c, err := New(broker)
 	require.NoError(t, err)
+	err = c.cm.AwaitConnection(context.Background())
+	require.NoError(t, err)
+	defer c.Close(context.Background())
+}
+
+func TestNewWithUser(t *testing.T) {
+	c, err := NewWithUser(broker, "test", "test")
+	require.NoError(t, err)
+	err = c.cm.AwaitConnection(context.Background())
+	require.NoError(t, err)
 	defer c.Close(context.Background())
 }
 
